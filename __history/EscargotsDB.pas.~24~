@@ -34,8 +34,6 @@ uses
     function version():TJSONObject;
     function collection():TJSONArray;
     function structure(collection:string):TJSONArray;
-    function list_lists(collection:string):TJSONArray;
-    function alldata(collection:string):TJSONArray;
   published
     { published declarations }
   end;
@@ -65,37 +63,6 @@ end;
 Result := True;
 end;
 
-
-function TeDB.alldata(collection: string): TJSONArray;
-var
-lHTTP : TIdHTTP;
-objeto: TJSONArray;
-_result:string;
-json:string;
-begin
-     lHTTP := TIdHTTP.Create(nil);
-     try
-       lHTTP.Request.ContentType := 'application/json';
-       lHTTP.Request.CharSet := 'UTF-8';
-       //Exit;
-       try
-       _result := lHTTP.get('http://'+Fhost+':'+Fport+'/alldata?collection='+collection);
-       except
-         on e: exception do
-         begin
-          ShowMessage('ERRO ['+e.Message+'] ao tentar conectar ao servidor.');
-          Exit;
-         end;
-       end;
-       json :=  _result;
-       objeto := TJSONObject.ParseJSONValue(TEncoding.ASCII.GetBytes(json),0) as TJSONArray;
-
-       Result := objeto;
-
-     finally
-       lHTTP.Free;
-     end;
-end;
 
 function TeDB.collection: TJSONArray;
 var
@@ -160,37 +127,6 @@ begin
 
 end;
 
-
-function TeDB.list_lists(collection: string): TJSONArray;
-var
-lHTTP : TIdHTTP;
-objeto: TJSONArray;
-_result:string;
-json:string;
-begin
-     lHTTP := TIdHTTP.Create(nil);
-     try
-       lHTTP.Request.ContentType := 'application/json';
-       lHTTP.Request.CharSet := 'UTF-8';
-       //Exit;
-       try
-       _result := lHTTP.get('http://'+Fhost+':'+Fport+'/list?collection='+collection);
-       except
-         on e: exception do
-         begin
-          ShowMessage('ERRO ['+e.Message+'] ao tentar conectar ao servidor.');
-          Exit;
-         end;
-       end;
-       json :=  _result;
-       objeto := TJSONObject.ParseJSONValue(TEncoding.ASCII.GetBytes(json),0) as TJSONArray;
-
-       Result := objeto;
-
-     finally
-       lHTTP.Free;
-     end;
-end;
 
 function TeDB.send_list(listName, collection, key: string): Boolean;
 var
@@ -291,9 +227,9 @@ const
                                      'o', 'o', 'o','o', 'o','O', 'O', 'O', 'O', 'O',
                                      'u', 'u', 'u','u','u', 'u','c','C','n', 'N');
   //Lista de Caracteres Extras
-  xCarExt: array[1..47] of string = ('<','>','!','@','#','$','%','¨','&','*',
+  xCarExt: array[1..48] of string = ('<','>','!','@','#','$','%','¨','&','*',
                                      '(',')','+','=','{','}','[',']','?',
-                                     ';','|','*','"','~','^','´','`',
+                                     ';',':','|','*','"','~','^','´','`',
                                      '¨','æ','Æ','ø','£','Ø','ƒ','ª','º','¿',
                                      '®','½','¼','ß','µ','þ','ý','Ý','"','°');
 var
@@ -305,7 +241,7 @@ begin
      xTexto := StringReplace(xTexto, xCarEsp[i], xCarTro[i], [rfreplaceall]);
    //De acordo com o parâmetro aLimExt, elimina caracteres extras.
    if (aLimExt) then
-     for i:=1 to 47 do
+     for i:=1 to 48 do
        xTexto := StringReplace(xTexto, xCarExt[i], '', [rfreplaceall]);
    Result := xTexto;
 end;

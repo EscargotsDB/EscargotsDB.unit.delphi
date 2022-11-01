@@ -79,7 +79,7 @@ begin
        lHTTP.Request.CharSet := 'UTF-8';
        //Exit;
        try
-       _result := lHTTP.get('http://'+Fhost+':'+Fport+'/alldata?collection='+collection);
+       _result := lHTTP.get('http://'+Fhost+':'+Fport+'/list?collection='+collection);
        except
          on e: exception do
          begin
@@ -95,6 +95,7 @@ begin
      finally
        lHTTP.Free;
      end;
+
 end;
 
 function TeDB.collection: TJSONArray;
@@ -291,9 +292,9 @@ const
                                      'o', 'o', 'o','o', 'o','O', 'O', 'O', 'O', 'O',
                                      'u', 'u', 'u','u','u', 'u','c','C','n', 'N');
   //Lista de Caracteres Extras
-  xCarExt: array[1..47] of string = ('<','>','!','@','#','$','%','¨','&','*',
+  xCarExt: array[1..48] of string = ('<','>','!','@','#','$','%','¨','&','*',
                                      '(',')','+','=','{','}','[',']','?',
-                                     ';','|','*','"','~','^','´','`',
+                                     ';',':','|','*','"','~','^','´','`',
                                      '¨','æ','Æ','ø','£','Ø','ƒ','ª','º','¿',
                                      '®','½','¼','ß','µ','þ','ý','Ý','"','°');
 var
@@ -305,7 +306,7 @@ begin
      xTexto := StringReplace(xTexto, xCarEsp[i], xCarTro[i], [rfreplaceall]);
    //De acordo com o parâmetro aLimExt, elimina caracteres extras.
    if (aLimExt) then
-     for i:=1 to 47 do
+     for i:=1 to 48 do
        xTexto := StringReplace(xTexto, xCarExt[i], '', [rfreplaceall]);
    Result := xTexto;
 end;
